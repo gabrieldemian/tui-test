@@ -10,7 +10,10 @@ use tui::{
     Frame,
 };
 
-use crate::app::{AppEvent, AppStyle};
+use crate::{
+    app::{AppEvent, AppStyle, Page},
+    topic_list::TopicList,
+};
 
 #[derive(Clone, Debug)]
 pub enum InputMode {
@@ -51,7 +54,11 @@ impl ChatRoom {
         match &self.input_mode {
             InputMode::Normal => match k {
                 KeyCode::Char('i') => self.input_mode = InputMode::Insert,
-                KeyCode::Char('q') | KeyCode::Esc => tx.send(AppEvent::Quit).unwrap(),
+                // KeyCode::Char('q') | KeyCode::Esc => tx.send(AppEvent::Quit).unwrap(),
+                KeyCode::Char('q') | KeyCode::Esc => {
+                    tx.send(AppEvent::ChangePage(Page::TopicList(TopicList::new())))
+                        .unwrap();
+                }
                 _ => {}
             },
             InputMode::Insert => match k {
